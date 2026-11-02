@@ -81,6 +81,7 @@ onClick={handleBack}            >
             type="button"
             className="expense-detail__back"
 onClick={handleBack}          >
+  
             Volver
           </button>
         </section>
