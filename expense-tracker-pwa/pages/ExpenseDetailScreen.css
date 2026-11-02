@@ -1,0 +1,125 @@
+/* Reset mínimo compartido con el resto de las pantallas. */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.expense-detail {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.expense-detail__header {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 24px);
+  padding-inline: 24px;
+  text-align: center;
+}
+
+.expense-detail__header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.expense-detail__main {
+  flex: 1;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.expense-detail__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.expense-detail__amount {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+.expense-detail__name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.expense-detail__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin: 16px 0 8px;
+  padding: 16px 0 0;
+  border-top: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.expense-detail__field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.expense-detail__field dt {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+}
+
+.expense-detail__field dd {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  color: #111827;
+  overflow-wrap: anywhere;
+}
+
+.expense-detail__not-found {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  color: #6b7280;
+}
+
+.expense-detail__back {
+  margin-top: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.expense-detail__back:hover {
+  background-color: #4338ca;
+}
+
+.expense-detail__back:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}

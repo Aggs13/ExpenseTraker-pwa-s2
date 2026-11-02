@@ -1,10 +1,8 @@
-import { useState } from 'react';
-import NewExpenseModal from '../src/components/NewExpenseModal';
+import { mockExpenses } from '../data/mockExpenses';
+import ExpenseCard from '../src/components/ExpenseCard';
 import './ExpensesScreen.css';
 
 export default function ExpensesScreen() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <div className="expenses">
       <header className="expenses__header">
@@ -12,19 +10,18 @@ export default function ExpensesScreen() {
       </header>
 
       <main className="expenses__main">
-        <section className="expenses__list" aria-label="Listado de gastos">
-          <p>Listado de gastos registrados</p>
-          <button
-            type="button"
-            className="expenses__add"
-            onClick={() => setIsModalOpen(true)}
-          >
-            Registrar Nuevo Gasto
-          </button>
-        </section>
+        {mockExpenses.length === 0 ? (
+          <p className="expenses__empty">Todavía no hay gastos registrados.</p>
+        ) : (
+          <ul className="expenses__list">
+            {mockExpenses.map((expense) => (
+              <li key={expense.id} className="expenses__item">
+                <ExpenseCard expense={expense} />
+              </li>
+            ))}
+          </ul>
+        )}
       </main>
-
-      <NewExpenseModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
