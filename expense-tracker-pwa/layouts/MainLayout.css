@@ -1,0 +1,20 @@
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* reserva el espacio de la barra fija + área segura */
+.main-layout__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+}
+
+/* las pantallas tienen min-height: 100dvh; acá solo deben ocupar lo disponible */
+.main-layout .main-layout__content > * {
+  flex: 1;
+  min-height: 0;
+}
