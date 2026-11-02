@@ -1,0 +1,77 @@
+:root {
+  --bottom-nav-height: 64px;
+}
+
+.bottom-nav {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 50;
+  background-color: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  /* respeta el área segura inferior */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.bottom-nav__list {
+  display: flex;
+  max-width: 480px;
+  height: var(--bottom-nav-height);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.bottom-nav__item {
+  flex: 1;
+  display: flex;
+}
+
+.bottom-nav__link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 44px;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.1s ease;
+}
+
+.bottom-nav__icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* pestaña activa */
+.bottom-nav__link--active {
+  color: #4f46e5;
+}
+
+.bottom-nav__link--active .bottom-nav__icon {
+  stroke-width: 2.4;
+}
+
+/* feedback táctil (no depende de :hover) */
+.bottom-nav__link:active {
+  background-color: #eef2ff;
+  transform: scale(0.96);
+}
+
+@media (hover: hover) {
+  .bottom-nav__link:hover {
+    color: #4f46e5;
+  }
+}
+
+.bottom-nav__link:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: -4px;
+  border-radius: 12px;
+}
