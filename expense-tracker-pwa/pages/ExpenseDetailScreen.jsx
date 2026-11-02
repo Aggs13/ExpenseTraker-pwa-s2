@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { mockExpenses } from '../data/mockExpenses';
 import CategoryBadge from '../src/components/CategoryBadge';
 import { formatCurrency, formatDate } from '../src/utils/format';
@@ -7,6 +7,12 @@ import './ExpenseDetailScreen.css';
 export default function ExpenseDetailScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
+  
+    const location = useLocation();
+
+  // si se entró directo por URL no hay historial previo: vuelve al listado
+  const handleBack = () =>
+    location.key === 'default' ? navigate('/expenses') : navigate(-1);
 
   // La URL es la fuente de verdad: el gasto se busca a partir del id de la ruta.
   // Así el detalle sobrevive a una recarga o a un enlace compartido.
@@ -27,8 +33,7 @@ export default function ExpenseDetailScreen() {
             <button
               type="button"
               className="expense-detail__back"
-              onClick={() => navigate(-1)}
-            >
+onClick={handleBack}            >
               Volver
             </button>
           </section>
@@ -75,8 +80,7 @@ export default function ExpenseDetailScreen() {
           <button
             type="button"
             className="expense-detail__back"
-            onClick={() => navigate(-1)}
-          >
+onClick={handleBack}          >
             Volver
           </button>
         </section>
