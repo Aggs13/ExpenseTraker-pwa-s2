@@ -1,0 +1,195 @@
+/* Modal <dialog> que emerge como bottom sheet desde la parte inferior. */
+.expense-modal {
+  position: fixed;
+  inset: auto 0 0 0;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #111827;
+  overflow: visible;
+}
+
+.expense-modal::backdrop {
+  background-color: rgba(17, 24, 39, 0.55);
+  animation: expense-backdrop-in 0.25s ease-out;
+}
+
+.expense-modal__sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 90vh;
+  max-height: 90dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+  background-color: #ffffff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.25);
+  animation: expense-sheet-in 0.3s ease-out;
+}
+
+.expense-modal__grabber {
+  width: 40px;
+  height: 4px;
+  margin: 0 auto;
+  flex-shrink: 0;
+  border-radius: 2px;
+  background-color: #e5e7eb;
+}
+
+.expense-modal__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  text-align: center;
+}
+
+.expense-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.expense-modal__field label,
+.expense-modal__label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.expense-modal__field input {
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background-color: #ffffff;
+  font-size: 16px; /* Evita el zoom automático en iOS al enfocar. */
+  color: #111827;
+}
+
+.expense-modal__field input::placeholder {
+  color: #6b7280;
+}
+
+.expense-modal__field input:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 1px;
+}
+
+.expense-modal__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.expense-modal__chip {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 22px;
+  background-color: #ffffff;
+  color: #111827;
+  font-size: 14px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.expense-modal__chip[aria-pressed='true'] {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.expense-modal__chip:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+.expense-modal__feedback {
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid #a7f3d0;
+  border-radius: 12px;
+  background-color: #ecfdf5;
+  color: #047857;
+  font-size: 14px;
+  text-align: center;
+}
+
+.expense-modal__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.expense-modal__actions button {
+  flex: 1;
+  box-sizing: border-box;
+  min-height: 44px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 0.15s ease;
+}
+
+.expense-modal__actions button:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+.expense-modal__submit {
+  border: none;
+  background-color: #4f46e5;
+  color: #ffffff;
+}
+
+.expense-modal__submit:hover {
+  background-color: #4338ca;
+}
+
+.expense-modal__cancel {
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  color: #6b7280;
+}
+
+.expense-modal__cancel:hover {
+  background-color: #f9fafb;
+}
+
+@keyframes expense-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes expense-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .expense-modal__sheet,
+  .expense-modal::backdrop {
+    animation: none;
+  }
+}

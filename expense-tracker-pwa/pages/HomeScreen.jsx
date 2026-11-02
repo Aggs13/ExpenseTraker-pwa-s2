@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { mockExpenses } from '../data/mockExpenses';
+import NewExpenseModal from '../src/components/NewExpenseModal';
 import './HomeScreen.css';
 
 export default function HomeScreen() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const total = mockExpenses.reduce((sum, expense) => sum + expense.amount, 0);
   const count = mockExpenses.length;
 
@@ -33,14 +37,20 @@ export default function HomeScreen() {
         </section>
 
         <section className="welcome__actions" aria-label="Accesos rápidos">
-          <Link to="/new" className="welcome__button welcome__button--primary">
+          <button
+            type="button"
+            className="welcome__button welcome__button--primary"
+            onClick={() => setIsModalOpen(true)}
+          >
             Registrar Nuevo Gasto
-          </Link>
+          </button>
           <Link to="/expenses" className="welcome__button welcome__button--secondary">
             Ver Listado Completo
           </Link>
         </section>
       </main>
+
+      <NewExpenseModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
