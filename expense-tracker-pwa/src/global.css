@@ -19,3 +19,13 @@ select,
 textarea {
   font: inherit;
 }
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+html,
+body {
+  overscroll-behavior-y: none;
+}

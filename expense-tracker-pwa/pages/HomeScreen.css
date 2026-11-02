@@ -134,3 +134,14 @@ body {
   background-color: #f9fafb;
   box-shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 }
+.welcome__button:active {
+  transform: scale(0.98);
+}
+
+.welcome__button--primary:active {
+  background-color: #3730a3;
+}
+
+.welcome__button--secondary:active {
+  background-color: #eef2ff;
+}

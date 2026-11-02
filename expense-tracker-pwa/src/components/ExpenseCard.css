@@ -50,3 +50,7 @@
   color: #4f46e5;
   white-space: nowrap;
 }
+.expense-card:active {
+  background-color: #eef2ff;
+  border-color: #c7d2fe;
+}

@@ -193,3 +193,16 @@
     animation: none;
   }
 }
+.expense-modal__submit:active {
+  background-color: #3730a3;
+  transform: scale(0.98);
+}
+
+.expense-modal__cancel:active {
+  background-color: #eef2ff;
+  transform: scale(0.98);
+}
+
+.expense-modal__chip:active {
+  transform: scale(0.96);
+}
