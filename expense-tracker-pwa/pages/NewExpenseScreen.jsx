@@ -9,7 +9,7 @@ export default function NewExpenseScreen() {
         <h1>Nuevo Gasto</h1>
       </header>
 
-      <main className="new-expense__main">
+      <main id="main-content" tabIndex={-1} className="new-expense__main">
         <section className="new-expense__card">
           <p>El formulario de carga de gastos estará disponible próximamente.</p>
           <Link to="/" className="new-expense__back">

@@ -1,0 +1,22 @@
+/* Transición suave entre pantallas: cada cambio de ruta monta un contenedor
+   nuevo y la animación CSS hace el resto. */
+.screen-transition {
+  min-height: 100vh;
+  min-height: 100dvh;
+  animation: screen-enter 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes screen-enter {
+  from {
+    transform: translateY(10px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-transition {
+    animation: none;
+  }
+}

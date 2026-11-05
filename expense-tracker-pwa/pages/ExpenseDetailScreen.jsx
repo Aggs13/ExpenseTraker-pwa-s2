@@ -19,7 +19,7 @@ export default function ExpenseDetailScreen() {
           <h1>Detalle del Gasto</h1>
         </header>
 
-        <main className="expense-detail__main">
+        <main id="main-content" tabIndex={-1} className="expense-detail__main">
           <section className="expense-detail__card expense-detail__card--empty">
             <p className="expense-detail__not-found">
               No encontramos un gasto con el id «{id}».
@@ -43,11 +43,11 @@ export default function ExpenseDetailScreen() {
         <h1>Detalle del Gasto</h1>
       </header>
 
-      <main className="expense-detail__main">
+      <main id="main-content" tabIndex={-1} className="expense-detail__main">
         <section className="expense-detail__card" aria-label="Detalle del gasto">
           <p className="expense-detail__amount">{formatCurrency(expense.amount)}</p>
           <p className="expense-detail__name">{expense.name}</p>
-          <CategoryBadge category={expense.category} />
+          <CategoryBadge category={expense.category} showIcon />
 
           <dl className="expense-detail__fields">
             <div className="expense-detail__field">

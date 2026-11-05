@@ -1,23 +1,23 @@
 import { useEffect, useState, useCallback } from 'react';
 
+function getIsStandalone() {
+  if (typeof window === 'undefined') return false;
+
+  const standaloneByMedia =
+    window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+
+  return Boolean(standaloneByMedia || navigator.standalone === true);
+}
+
 export function usePWAInstall() {
   const [installPrompt, setInstallPrompt] = useState(null);
-  const [isInstalled, setIsInstalled] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(getIsStandalone);
 
   useEffect(() => {
-    // Detecta si ya está instalada (modo standalone)
-    const standalone =
-      (typeof window !== 'undefined' &&
-        window.matchMedia &&
-        window.matchMedia('(display-mode: standalone)').matches) ||
-      (typeof navigator !== 'undefined' && navigator.standalone === true);
-
-    setIsInstalled(Boolean(standalone));
-
     // Captura el evento beforeinstallprompt (Android/Chrome)
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault(); // Evita el banner automático del navegador
-      setInstallPrompt(e);
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault(); // Evita el banner automático del navegador
+      setInstallPrompt(event);
     };
 
     // Marca como instalada si se completa la instalación
@@ -44,9 +44,7 @@ export function usePWAInstall() {
 
   // Detecta iOS (Safari no dispara beforeinstallprompt)
   const isIOS =
-    typeof navigator !== 'undefined' &&
-    /iphone|ipad|ipod/i.test(navigator.userAgent) &&
-    !window.MSStream;
+    typeof navigator !== 'undefined' && /iphone|ipad|ipod/i.test(navigator.userAgent);
 
   // Solo se puede instalar si hay prompt disponible y no está instalada
   const canInstall = Boolean(installPrompt) && !isInstalled;
