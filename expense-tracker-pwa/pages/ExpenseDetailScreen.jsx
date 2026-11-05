@@ -1,12 +1,8 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { mockExpenses } from '../data/mockExpenses';
-import { demoExpenses } from '../data/demoExpenses';
 import CategoryBadge from '../src/components/CategoryBadge';
 import { formatCurrency, formatDate } from '../src/utils/format';
 import './ExpenseDetailScreen.css';
-
-// Los gastos reales y los de la demo de rendimiento comparten la misma ruta de detalle.
-const EXPENSES = [...mockExpenses, ...demoExpenses];
 
 export default function ExpenseDetailScreen() {
   const { id } = useParams();
@@ -14,7 +10,7 @@ export default function ExpenseDetailScreen() {
 
   // La URL es la fuente de verdad: el gasto se busca a partir del id de la ruta.
   // Así el detalle sobrevive a una recarga o a un enlace compartido.
-  const expense = EXPENSES.find((item) => String(item.id) === id);
+  const expense = mockExpenses.find((item) => String(item.id) === id);
 
   if (!expense) {
     return (
