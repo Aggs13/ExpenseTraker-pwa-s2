@@ -16,9 +16,9 @@ npm run preview  # sirve el build de producción
 ## Estructura principal
 
 - `pages/`: pantallas de la aplicación.
-- `src/components/`: componentes reutilizables (tarjetas, badges, íconos, modal).
-- `data/mockExpenses.js`: datos de ejemplo. Incluye 120 registros para poder comparar
-  el renderizado virtualizado con `map()`.
+- `src/components/`: componentes reutilizables (tarjetas, badges, íconos, modal y listado).
+- `data/mockExpenses.js`: gastos de ejemplo que se muestran en la app (3 registros).
+- `data/demoExpenses.js`: 500 registros generados sólo para la pantalla de comparación.
 - `public/`: manifest, íconos, `robots.txt` y service worker.
 - `router/AppRouter.jsx`: rutas y transición entre pantallas.
 
@@ -55,19 +55,50 @@ Al final del listado se muestra una tarjeta con el **total de gastos**, calculad
 
 ## 3. TanStack Virtual vs `map()`
 
-El listado de `/expenses` usa `@tanstack/react-virtual` y permite alternar en caliente
-entre dos modos:
+La comparación está separada en dos pantallas para no mezclar datos de prueba con el
+listado real:
 
-- **Virtual**: sólo se montan las tarjetas visibles (más una pequeña ventana de
-  `overscan`). El hint muestra cuántas tarjetas están montadas.
-- **map()**: se renderizan las 120 tarjetas del listado, igual que en la comparación
-  entre `FlatList` y `ScrollView` de React Native.
+- **`/expenses`**: listado real con los 3 gastos de ejemplo. Usa el componente
+  `ExpenseList` en modo `virtual`, o sea TanStack Virtual. Muestra el total al final.
+- **`/comparison`**: pantalla de comparación con 500 gastos generados. Tiene un selector
+  para alternar entre **Virtual** y **map()**, y muestra cuántas tarjetas están montadas.
+
+La idea es la misma que comparar `FlatList` con `ScrollView` en React Native:
+
+- **TanStack Virtual** sólo monta las filas que están dentro del viewport (más unas pocas
+  de `overscan`). El resto existe como espacio reservado, no como nodos del DOM.
+- **`map()`** monta las 500 tarjetas de una vez, aunque no se vean.
+
+El componente reutilizable está en `src/components/ExpenseList.jsx`:
+
+```jsx
+const virtualizer = useVirtualizer({
+  count: expenses.length,
+  getScrollElement: () => scrollRef.current,
+  estimateSize: () => 82,
+  overscan: 6,
+});
+
+// Modo virtual: sólo se recorren las filas visibles.
+virtualItems.map((virtualItem) => (
+  <li style={{ transform: `translateY(${virtualItem.start}px)` }}>
+    <ExpenseCard expense={expenses[virtualItem.index]} />
+  </li>
+));
+
+// Modo map(): se recorren todas.
+expenses.map((expense) => (
+  <li key={expense.id}>
+    <ExpenseCard expense={expense} />
+  </li>
+));
+```
 
 La comparación se puede observar con el contador que aparece debajo del selector:
 
 ```text
-TanStack Virtual monta 10 de 120 tarjetas.
-map() monta las 120 tarjetas del listado.
+TanStack Virtual monta ~10 de 500 tarjetas.
+map() monta las 500 tarjetas del listado.
 ```
 
 Además, el contenedor del listado es un `region` con `tabIndex={0}` para que también se
@@ -137,6 +168,7 @@ Resultado medido con **Lighthouse 12.8.2**, Chrome 131 headless, sobre
 | --- | ---: | ---: | ---: | ---: |
 | Inicio (`/`) | 99 | 100 | 100 | 100 |
 | Listado (`/expenses`) | 99 | 100 | 100 | 100 |
+| Comparación (`/comparison`) | 99 | 100 | 100 | 100 |
 | Detalle (`/expenses/1`) | 99 | 100 | 100 | 100 |
 
 Los puntajes pueden variar según dispositivo, red y versión de Chrome. Para reproducir:

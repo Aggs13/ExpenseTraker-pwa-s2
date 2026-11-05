@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 import HomeScreen from '../pages/HomeScreen';
 import ExpensesScreen from '../pages/ExpensesScreen';
+import ExpensesComparisonScreen from '../pages/ExpensesComparisonScreen';
 import ExpenseDetailScreen from '../pages/ExpenseDetailScreen';
 import SettingsScreen from '../pages/SettingsScreen';
 import NewExpenseScreen from '../pages/NewExpenseScreen';
@@ -21,6 +22,7 @@ function AppRoutes() {
           <Route path="/" element={<HomeScreen />} />
           <Route path="/new" element={<NewExpenseScreen />} />
           <Route path="/expenses" element={<ExpensesScreen />} />
+          <Route path="/comparison" element={<ExpensesComparisonScreen />} />
           <Route path="/expenses/:id" element={<ExpenseDetailScreen />} />
           <Route path="/settings" element={<SettingsScreen />} />
         </Routes>

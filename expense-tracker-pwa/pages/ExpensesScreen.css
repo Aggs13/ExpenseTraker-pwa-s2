@@ -72,6 +72,38 @@ body {
   color: #111827;
 }
 
+.expenses__compare-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #4f46e5;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.expenses__compare-link svg {
+  width: 15px;
+  height: 15px;
+}
+
+.expenses__compare-link:hover {
+  border-color: #c7d2fe;
+  background-color: #eef2ff;
+}
+
+.expenses__compare-link:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
 .expenses__view-toggle {
   display: inline-flex;
   padding: 3px;
@@ -124,7 +156,7 @@ body {
 }
 
 .expenses__list-viewport {
-  height: clamp(280px, 56dvh, 520px);
+  max-height: clamp(280px, 56dvh, 520px);
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
