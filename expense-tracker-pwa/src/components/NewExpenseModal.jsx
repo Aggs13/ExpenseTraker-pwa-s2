@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { CATEGORIES } from '../utils/categories';
 import './NewExpenseModal.css';
-
-const CATEGORIES = ['Comida', 'Transporte', 'Ocio', 'Salud', 'Otros'];
 
 export default function NewExpenseModal({ open = false, onClose = () => {} }) {
   const dialogRef = useRef(null);
@@ -52,7 +51,6 @@ export default function NewExpenseModal({ open = false, onClose = () => {} }) {
     const expense = { name: name.trim(), amount: amount.trim(), category };
 
     // Por ahora sólo se muestra la acción: todavía no se persiste nada.
-    console.log('Nuevo gasto (demo):', expense);
     setFeedback(`Gasto "${expense.name || 'sin nombre'}" registrado (demo).`);
 
     setName('');

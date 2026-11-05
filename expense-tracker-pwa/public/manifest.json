@@ -1,16 +1,35 @@
 {
+  "id": "/",
   "name": "ExpenseTracker",
   "short_name": "ExpenseTracker",
   "description": "Aplicación para registrar y llevar el control de tus gastos personales.",
+  "lang": "es-AR",
+  "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#4f46e5",
+  "categories": ["finance", "productivity"],
+  "prefer_related_applications": false,
   "icons": [
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
     { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ver listado de gastos",
+      "short_name": "Gastos",
+      "url": "/expenses",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Registrar un gasto",
+      "short_name": "Nuevo gasto",
+      "url": "/new",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
   ]
 }

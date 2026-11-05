@@ -1,20 +1,17 @@
+import CategoryIcon from './CategoryIcon';
+import { getCategoryMeta } from '../utils/categories';
 import './CategoryBadge.css';
 
 // Variante visual por categoría. Las categorías desconocidas usan la variante base.
-const VARIANT_BY_CATEGORY = {
-  Comida: 'food',
-  Transporte: 'transport',
-  Servicios: 'services',
-  Ocio: 'leisure',
-  Salud: 'health',
-};
-
-export default function CategoryBadge({ category }) {
+export default function CategoryBadge({ category, showIcon = false }) {
   if (!category) return null;
 
-  const variant = VARIANT_BY_CATEGORY[category] ?? 'default';
+  const { variant } = getCategoryMeta(category);
 
   return (
-    <span className={`category-badge category-badge--${variant}`}>{category}</span>
+    <span className={`category-badge category-badge--${variant}`}>
+      {showIcon && <CategoryIcon category={category} className="category-badge__icon" />}
+      <span>{category}</span>
+    </span>
   );
 }

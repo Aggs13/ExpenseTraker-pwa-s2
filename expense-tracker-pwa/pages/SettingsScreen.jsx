@@ -8,7 +8,7 @@ export default function SettingsScreen() {
         <h1>Ajustes</h1>
       </header>
 
-      <main className="settings__main">
+      <main id="main-content" tabIndex={-1} className="settings__main">
         <section className="settings__card" aria-label="Instalación">
           <h2 className="settings__card-title">Instalar la aplicación</h2>
           <p className="settings__card-text">
