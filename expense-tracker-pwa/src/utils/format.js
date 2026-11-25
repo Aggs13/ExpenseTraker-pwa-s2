@@ -6,9 +6,10 @@ export function formatCurrency(amount) {
 
 export function formatDate(date) {
   if (!date) return '';
-  // Se agrega la hora para evitar que el navegador desplace la fecha por zona horaria.
-  const parsed = new Date(`${date}T00:00:00`);
-  if (Number.isNaN(parsed.getTime())) return date;
+  const raw = String(date);
+  // Si viene solo YYYY-MM-DD se agrega la hora para evitar desplazamiento por zona horaria.
+  const parsed = raw.includes('T') ? new Date(raw) : new Date(`${raw}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return raw;
 
   return parsed.toLocaleDateString('es-AR', {
     day: '2-digit',

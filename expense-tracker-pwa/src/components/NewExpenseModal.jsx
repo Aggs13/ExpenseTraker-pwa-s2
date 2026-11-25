@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CATEGORIES } from '../utils/categories';
+import { useExpenses } from '../context/ExpensesContext';
+import { CATEGORIES } from '../data/categories';
 import './NewExpenseModal.css';
 
 export default function NewExpenseModal({ open = false, onClose = () => {} }) {
+  const { addExpense } = useExpenses();
   const dialogRef = useRef(null);
   const feedbackTimerRef = useRef(null);
   const onCloseRef = useRef(onClose);
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
+  const [notes, setNotes] = useState('');
   const [feedback, setFeedback] = useState('');
 
   // Mantiene una referencia estable al callback del padre.
@@ -48,14 +51,24 @@ export default function NewExpenseModal({ open = false, onClose = () => {} }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const expense = { name: name.trim(), amount: amount.trim(), category };
+    const trimmedTitle = name.trim();
+    const numericAmount = Number(amount);
 
-    // Por ahora sólo se muestra la acción: todavía no se persiste nada.
-    setFeedback(`Gasto "${expense.name || 'sin nombre'}" registrado (demo).`);
+    if (trimmedTitle && !Number.isNaN(numericAmount) && numericAmount > 0) {
+      addExpense({
+        title: trimmedTitle,
+        amount: numericAmount,
+        category,
+        notes: notes.trim(),
+      });
+    }
+
+    setFeedback(`Gasto "${trimmedTitle || 'sin nombre'}" registrado.`);
 
     setName('');
     setAmount('');
     setCategory(CATEGORIES[0]);
+    setNotes('');
 
     window.clearTimeout(feedbackTimerRef.current);
     feedbackTimerRef.current = window.setTimeout(() => setFeedback(''), 3000);

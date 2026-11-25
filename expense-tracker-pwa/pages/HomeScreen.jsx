@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoChevronForward, IoReceiptOutline, IoWalletOutline } from 'react-icons/io5';
-import { mockExpenses } from '../data/mockExpenses';
+import { useExpenses } from '../src/context/ExpensesContext';
 import NewExpenseModal from '../src/components/NewExpenseModal';
 import './HomeScreen.css';
 
 export default function HomeScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { expenses } = useExpenses();
 
-  const total = mockExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-  const count = mockExpenses.length;
+  const total = expenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+  const count = expenses.length;
 
   return (
     <div className="welcome">

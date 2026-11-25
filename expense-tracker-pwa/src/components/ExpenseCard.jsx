@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import CategoryBadge from './CategoryBadge';
 import CategoryIcon from './CategoryIcon';
-import { getCategoryMeta } from '../utils/categories';
+import { getCategoryMeta } from '../data/categories';
 import { formatCurrency } from '../utils/format';
 import './ExpenseCard.css';
 
@@ -10,6 +10,7 @@ export default function ExpenseCard({ expense }) {
   if (!expense) return null;
 
   const { variant } = getCategoryMeta(expense.category);
+  const title = expense.title ?? expense.name ?? expense.nombre;
 
   return (
     <article className={`expense-card expense-card--${variant}`}>
@@ -19,7 +20,7 @@ export default function ExpenseCard({ expense }) {
         </span>
 
         <div className="expense-card__info">
-          <p className="expense-card__name">{expense.name}</p>
+          <p className="expense-card__name">{title}</p>
           <CategoryBadge category={expense.category} />
         </div>
 

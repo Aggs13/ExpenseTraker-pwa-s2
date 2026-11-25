@@ -1,5 +1,5 @@
 import CategoryIcon from './CategoryIcon';
-import { getCategoryMeta } from '../utils/categories';
+import { getCategoryMeta } from '../data/categories';
 import './CategoryBadge.css';
 
 // Variante visual por categoría. Las categorías desconocidas usan la variante base.

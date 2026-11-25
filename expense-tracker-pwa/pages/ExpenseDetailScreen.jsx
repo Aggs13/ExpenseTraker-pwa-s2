@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { mockExpenses } from '../data/mockExpenses';
+import { useExpenses } from '../src/context/ExpensesContext';
 import CategoryBadge from '../src/components/CategoryBadge';
 import { formatCurrency, formatDate } from '../src/utils/format';
 import './ExpenseDetailScreen.css';
@@ -8,14 +8,14 @@ export default function ExpenseDetailScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const { expenses } = useExpenses();
 
   // Si se entró directo por URL no hay historial previo: vuelve al listado.
   const handleBack = () =>
     location.key === 'default' ? navigate('/expenses') : navigate(-1);
 
-  // La URL es la fuente de verdad: el gasto se busca a partir del id de la ruta.
-  // Así el detalle sobrevive a una recarga o a un enlace compartido.
-  const expense = mockExpenses.find((item) => String(item.id) === id);
+  // La URL es la fuente de verdad: el gasto se busca en el Context a partir del id de la ruta.
+  const expense = expenses.find((item) => String(item.id) === String(id));
 
   if (!expense) {
     return (
@@ -42,6 +42,9 @@ export default function ExpenseDetailScreen() {
     );
   }
 
+  const title = expense.title ?? expense.name ?? expense.nombre;
+  const createdAt = expense.createdAt ?? expense.date;
+
   return (
     <div className="expense-detail">
       <header className="expense-detail__header">
@@ -51,13 +54,13 @@ export default function ExpenseDetailScreen() {
       <main id="main-content" tabIndex={-1} className="expense-detail__main">
         <section className="expense-detail__card" aria-label="Detalle del gasto">
           <p className="expense-detail__amount">{formatCurrency(expense.amount)}</p>
-          <p className="expense-detail__name">{expense.name}</p>
+          <p className="expense-detail__name">{title}</p>
           <CategoryBadge category={expense.category} showIcon />
 
           <dl className="expense-detail__fields">
             <div className="expense-detail__field">
               <dt>Descripción</dt>
-              <dd>{expense.name}</dd>
+              <dd>{title}</dd>
             </div>
             <div className="expense-detail__field">
               <dt>Monto</dt>
@@ -69,7 +72,7 @@ export default function ExpenseDetailScreen() {
             </div>
             <div className="expense-detail__field">
               <dt>Fecha</dt>
-              <dd>{formatDate(expense.date)}</dd>
+              <dd>{formatDate(createdAt)}</dd>
             </div>
             <div className="expense-detail__field">
               <dt>Notas</dt>
