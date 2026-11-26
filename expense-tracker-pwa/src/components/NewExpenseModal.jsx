@@ -14,6 +14,7 @@ export default function NewExpenseModal({ open = false, onClose = () => {} }) {
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [notes, setNotes] = useState('');
   const [feedback, setFeedback] = useState('');
+  const [error, setError] = useState('');
 
   // Mantiene una referencia estable al callback del padre.
   useEffect(() => {
@@ -39,6 +40,7 @@ export default function NewExpenseModal({ open = false, onClose = () => {} }) {
 
     const handleNotifyClose = () => {
       setFeedback('');
+      setError('');
       onCloseRef.current();
     };
 
@@ -52,18 +54,23 @@ export default function NewExpenseModal({ open = false, onClose = () => {} }) {
     event.preventDefault();
 
     const trimmedTitle = name.trim();
-    const numericAmount = Number(amount);
+    const numericAmount = Number(String(amount).trim().replace(',', '.'));
 
-    if (trimmedTitle && !Number.isNaN(numericAmount) && numericAmount > 0) {
-      addExpense({
-        title: trimmedTitle,
-        amount: numericAmount,
-        category,
-        notes: notes.trim(),
-      });
+    if (!trimmedTitle || !String(amount).trim() || Number.isNaN(numericAmount) || numericAmount <= 0) {
+      setFeedback('');
+      setError('Ingresa un nombre válido y un monto mayor a cero.');
+      return;
     }
 
-    setFeedback(`Gasto "${trimmedTitle || 'sin nombre'}" registrado.`);
+    setError('');
+    addExpense({
+      title: trimmedTitle,
+      amount: numericAmount,
+      category,
+      notes: notes.trim(),
+    });
+
+    setFeedback(`Gasto "${trimmedTitle}" registrado.`);
 
     setName('');
     setAmount('');
@@ -143,6 +150,24 @@ export default function NewExpenseModal({ open = false, onClose = () => {} }) {
             ))}
           </div>
         </div>
+
+        <div className="expense-modal__field">
+          <label htmlFor="expense-notes">Notas (opcional)</label>
+          <input
+            id="expense-notes"
+            type="text"
+            placeholder="Ej: Compra semanal"
+            autoComplete="off"
+            value={notes}
+            onChange={(event) => setNotes(event.target.value)}
+          />
+        </div>
+
+        {error && (
+          <p className="expense-modal__error" role="alert">
+            {error}
+          </p>
+        )}
 
         {feedback && (
           <p className="expense-modal__feedback" role="status">

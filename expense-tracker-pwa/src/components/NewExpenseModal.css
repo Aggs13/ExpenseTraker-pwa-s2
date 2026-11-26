@@ -127,6 +127,17 @@
   text-align: center;
 }
 
+.expense-modal__error {
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  background-color: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+  text-align: center;
+}
+
 .expense-modal__actions {
   display: flex;
   gap: 12px;

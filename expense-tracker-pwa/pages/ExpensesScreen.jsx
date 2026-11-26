@@ -16,7 +16,7 @@ export default function ExpensesScreen() {
 
       <main id="main-content" tabIndex={-1} className="expenses__main">
         {expenses.length === 0 ? (
-          <p className="expenses__empty">Todavía no hay gastos registrados.</p>
+          <p className="expenses__empty">Todavía no registraste gastos</p>
         ) : (
           <ul className="expenses__list">
             {expenses.map((expense) => (

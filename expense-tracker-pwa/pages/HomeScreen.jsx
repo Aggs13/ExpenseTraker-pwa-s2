@@ -44,6 +44,12 @@ export default function HomeScreen() {
           </div>
         </section>
 
+        {count === 0 && (
+          <p className="welcome__empty" role="status">
+            Todavía no registraste gastos
+          </p>
+        )}
+
         <section className="welcome__actions" aria-label="Accesos rápidos">
           <button
             type="button"

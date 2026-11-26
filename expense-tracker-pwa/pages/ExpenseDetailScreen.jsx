@@ -8,7 +8,7 @@ export default function ExpenseDetailScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { expenses } = useExpenses();
+  const { expenses, removeExpense } = useExpenses();
 
   // Si se entró directo por URL no hay historial previo: vuelve al listado.
   const handleBack = () =>
@@ -16,6 +16,18 @@ export default function ExpenseDetailScreen() {
 
   // La URL es la fuente de verdad: el gasto se busca en el Context a partir del id de la ruta.
   const expense = expenses.find((item) => String(item.id) === String(id));
+
+  const handleDelete = () => {
+    if (!expense) return;
+    const title = expense.title ?? expense.name ?? expense.nombre;
+    const confirmed = window.confirm(
+      `¿Estás seguro de que quieres eliminar "${title}"?`
+    );
+    if (confirmed) {
+      removeExpense(expense.id);
+      navigate('/expenses');
+    }
+  };
 
   if (!expense) {
     return (
@@ -80,13 +92,22 @@ export default function ExpenseDetailScreen() {
             </div>
           </dl>
 
-          <button
-            type="button"
-            className="expense-detail__back"
-            onClick={handleBack}
-          >
-            Volver
-          </button>
+          <div className="expense-detail__actions">
+            <button
+              type="button"
+              className="expense-detail__delete"
+              onClick={handleDelete}
+            >
+              Eliminar
+            </button>
+            <button
+              type="button"
+              className="expense-detail__back"
+              onClick={handleBack}
+            >
+              Volver
+            </button>
+          </div>
         </section>
       </main>
     </div>
