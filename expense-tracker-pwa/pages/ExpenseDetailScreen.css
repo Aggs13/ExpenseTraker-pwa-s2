@@ -109,6 +109,34 @@ body {
   margin-top: 8px;
 }
 
+.expense-detail__edit {
+  width: 100%;
+  padding: 12px 24px;
+  border: 1px solid #4f46e5;
+  border-radius: 12px;
+  background-color: #eef2ff;
+  color: #4f46e5;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.expense-detail__edit:hover {
+  background-color: #e0e7ff;
+}
+
+.expense-detail__edit:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+.expense-detail__edit:active {
+  background-color: #c7d2fe;
+  transform: scale(0.98);
+}
+
 .expense-detail__delete {
   width: 100%;
   padding: 12px 24px;

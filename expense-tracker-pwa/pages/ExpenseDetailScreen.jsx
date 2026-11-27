@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useExpenses } from '../src/context/ExpensesContext';
 import CategoryBadge from '../src/components/CategoryBadge';
+import NewExpenseModal from '../src/components/NewExpenseModal';
 import { formatCurrency, formatDate } from '../src/utils/format';
 import './ExpenseDetailScreen.css';
 
@@ -9,6 +11,7 @@ export default function ExpenseDetailScreen() {
   const navigate = useNavigate();
   const location = useLocation();
   const { expenses, removeExpense } = useExpenses();
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   // Si se entró directo por URL no hay historial previo: vuelve al listado.
   const handleBack = () =>
@@ -109,6 +112,13 @@ export default function ExpenseDetailScreen() {
           <div className="expense-detail__actions">
             <button
               type="button"
+              className="expense-detail__edit"
+              onClick={() => setIsEditOpen(true)}
+            >
+              Editar
+            </button>
+            <button
+              type="button"
               className="expense-detail__delete"
               onClick={handleDelete}
             >
@@ -124,6 +134,15 @@ export default function ExpenseDetailScreen() {
           </div>
         </section>
       </main>
+
+      {isEditOpen && (
+        <NewExpenseModal
+          key={expense.id}
+          open={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          expense={expense}
+        />
+      )}
     </div>
   );
 }

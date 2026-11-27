@@ -125,3 +125,27 @@ Uno de los puntos clave observados durante las pruebas radica en el comportamien
 Enlace o archivo con ambas aplicaciones (React Native y PWA) abiertas en simultáneo en pantalla dividida, mostrando la creación de un gasto en una aplicación y su reflejo automático en la otra en tiempo real:
 
 - **Video / GIF comparativo:** `[Ver video demo](./docs/demo-sincronizacion.mp4)` *(o enlace a Google Drive / YouTube).*
+
+
+---
+
+## 7. User Story #7 (Bonus 3): Edición, Indicador de Conexión y Auth Anónima
+
+### 7.1 Edición de gastos con `updateDoc()`
+- Se agregó `updateExpense(id, data)` en `ExpensesContext.jsx` utilizando `updateDoc(doc(db, 'users', user.uid, 'expenses', String(id)), updatedFields)` sin bloquear la UI ante falta de conexión (Optimistic UI).
+- En `ExpenseDetailScreen.jsx` se incorporó el botón **Editar**, que reutiliza `NewExpenseModal.jsx` en modo edición (`expense={expense}`), precargando los valores actuales y reflejando los cambios en tiempo real vía `onSnapshot()`.
+
+### 7.2 Indicador de conexión (`navigator.onLine`)
+- Se creó el hook `useNetworkStatus.js` escuchando los eventos `online` y `offline` del navegador sobre `navigator.onLine`.
+- El componente `OfflineBanner.jsx` se montó en `MainLayout.jsx` para mostrar el aviso **"Sin conexión — Los cambios se sincronizarán al volver a conectarse"** en toda la PWA cuando el dispositivo pierde red.
+
+### 7.3 Firebase Authentication anónima y Reglas de Firestore
+- En `src/services/firebase.js` se inicializó `auth = getAuth(app)` y en `ExpensesContext.jsx` se ejecuta `signInAnonymously(auth)` automáticamente mediante `onAuthStateChanged` cuando no hay sesión activa.
+- Los gastos pasaron a almacenarse en `users/{uid}/expenses`, protegidos por `firestore.rules` para que cada usuario autenticado solo pueda leer y escribir sus propios documentos (`request.auth != null && request.auth.uid == userId`).
+
+#### ¿Por qué las apps dejan de compartir gastos con usuarios anónimos y cómo resolverlo?
+Con `signInAnonymously()`, cada instancia (PWA en el navegador y app móvil en Expo) genera un **`uid` aleatorio distinto**, por lo que cada aplicación lee y escribe en una subcolección diferente (`users/{uid_pwa}/expenses` vs `users/{uid_rn}/expenses`) y ya no comparten los mismos gastos.
+
+Para resolverlo manteniendo la privacidad por persona usuaria:
+1. **Autenticación con cuenta real (Google o Email/Contraseña):** reemplazar o vincular (`linkWithCredential`) la sesión anónima con un proveedor real para que la misma persona inicie sesión en ambas plataformas con el **mismo `uid`**.
+2. **Colección compartida por grupo/hogar:** si varias personas o dispositivos necesitan compartir gastos con cuentas distintas, guardar los gastos en `groups/{groupId}/expenses` y validar en las reglas de Firestore que `request.auth.uid` pertenezca al arreglo `members` del grupo.

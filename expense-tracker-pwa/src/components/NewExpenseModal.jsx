@@ -4,15 +4,24 @@ import { useExpenses } from '../context/ExpensesContext';
 import { CATEGORIES } from '../data/categories';
 import './NewExpenseModal.css';
 
-export default function NewExpenseModal({ open = false, onClose = () => {} }) {
-  const { addExpense } = useExpenses();
+export default function NewExpenseModal({
+  open = false,
+  onClose = () => {},
+  expense = null,
+}) {
+  const { addExpense, updateExpense } = useExpenses();
+  const isEditing = Boolean(expense);
   const dialogRef = useRef(null);
   const feedbackTimerRef = useRef(null);
   const onCloseRef = useRef(onClose);
-  const [name, setName] = useState('');
-  const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState(CATEGORIES[0]);
-  const [notes, setNotes] = useState('');
+  const [name, setName] = useState(() => expense?.title ?? expense?.name ?? expense?.nombre ?? '');
+  const [amount, setAmount] = useState(() =>
+    expense?.amount != null ? String(expense.amount) : ''
+  );
+  const [category, setCategory] = useState(
+    () => expense?.category ?? expense?.categoria ?? CATEGORIES[0]
+  );
+  const [notes, setNotes] = useState(() => expense?.notes ?? '');
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState('');
 
@@ -63,6 +72,19 @@ export default function NewExpenseModal({ open = false, onClose = () => {} }) {
     }
 
     setError('');
+
+    if (isEditing) {
+      updateExpense(expense.id, {
+        title: trimmedTitle,
+        amount: numericAmount,
+        category,
+        notes: notes.trim(),
+      });
+      const dialog = dialogRef.current;
+      if (dialog && dialog.open) dialog.close();
+      return;
+    }
+
     addExpense({
       title: trimmedTitle,
       amount: numericAmount,
@@ -100,7 +122,7 @@ export default function NewExpenseModal({ open = false, onClose = () => {} }) {
       <form className="expense-modal__sheet" onSubmit={handleSubmit}>
         <span className="expense-modal__grabber" aria-hidden="true" />
         <h2 id="expense-modal-title" className="expense-modal__title">
-          Nuevo gasto
+          {isEditing ? 'Editar gasto' : 'Nuevo gasto'}
         </h2>
 
         <div className="expense-modal__field">
@@ -180,7 +202,7 @@ export default function NewExpenseModal({ open = false, onClose = () => {} }) {
             Cancelar
           </button>
           <button type="submit" className="expense-modal__submit">
-            Guardar
+            {isEditing ? 'Guardar cambios' : 'Guardar'}
           </button>
         </div>
       </form>

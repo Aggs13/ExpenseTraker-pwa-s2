@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import {
   addDoc,
   collection,
@@ -8,18 +9,40 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
 } from 'firebase/firestore';
 import { CATEGORIES } from '../data/categories';
-import { db } from '../services/firebase';
+import { auth, db } from '../services/firebase';
 
 const ExpensesContext = createContext(null);
 
 export function ExpensesProvider({ children }) {
+  const [user, setUser] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const q = query(collection(db, 'expenses'), orderBy('createdAt', 'desc'));
+    const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        signInAnonymously(auth).catch((error) => {
+          console.error('Error al iniciar sesión anónima:', error);
+          setIsLoaded(true);
+        });
+      }
+    });
+
+    return () => unsubscribeAuth();
+  }, []);
+
+  useEffect(() => {
+    if (!user) return undefined;
+
+    const q = query(
+      collection(db, 'users', user.uid, 'expenses'),
+      orderBy('createdAt', 'desc')
+    );
 
     const unsubscribe = onSnapshot(
       q,
@@ -47,9 +70,10 @@ export function ExpensesProvider({ children }) {
     );
 
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   const addExpense = (data) => {
+    if (!user) return null;
     const title = String(data?.title ?? data?.name ?? data?.nombre ?? '').trim();
     const amount = Number(data?.amount);
     if (!title || Number.isNaN(amount) || amount <= 0) {
@@ -65,25 +89,57 @@ export function ExpensesProvider({ children }) {
     };
 
     // No bloqueamos el formulario esperando al servidor (Optimistic UI en offline).
-    addDoc(collection(db, 'expenses'), newExpense).catch((error) => {
-      console.error('Error al guardar el gasto en Firestore:', error);
-    });
+    addDoc(collection(db, 'users', user.uid, 'expenses'), newExpense).catch(
+      (error) => {
+        console.error('Error al guardar el gasto en Firestore:', error);
+      }
+    );
 
     return newExpense;
   };
 
-  const removeExpense = (id) => {
-    deleteDoc(doc(db, 'expenses', String(id))).catch((error) => {
-      console.error('Error al eliminar el gasto en Firestore:', error);
+  const updateExpense = (id, data) => {
+    if (!user || !id) return null;
+    const title = String(data?.title ?? data?.name ?? data?.nombre ?? '').trim();
+    const amount = Number(data?.amount);
+    if (!title || Number.isNaN(amount) || amount <= 0) {
+      return null;
+    }
+
+    const updatedFields = {
+      title,
+      amount,
+      category: data?.category ?? data?.categoria ?? CATEGORIES[0],
+      notes: String(data?.notes ?? '').trim(),
+    };
+
+    updateDoc(
+      doc(db, 'users', user.uid, 'expenses', String(id)),
+      updatedFields
+    ).catch((error) => {
+      console.error('Error al actualizar el gasto en Firestore:', error);
     });
+
+    return updatedFields;
+  };
+
+  const removeExpense = (id) => {
+    if (!user || !id) return;
+    deleteDoc(doc(db, 'users', user.uid, 'expenses', String(id))).catch(
+      (error) => {
+        console.error('Error al eliminar el gasto en Firestore:', error);
+      }
+    );
   };
 
   return (
     <ExpensesContext.Provider
       value={{
+        user,
         expenses,
         isLoaded,
         addExpense,
+        updateExpense,
         removeExpense,
       }}
     >
