@@ -165,3 +165,25 @@ body {
   background-color: #3730a3;
   transform: scale(0.98);
 }
+
+.expense-detail__sync-status {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.expense-detail__sync-status--pending {
+  color: #b45309;
+  background-color: #fef3c7;
+  border: 1px solid #fde68a;
+}
+
+.expense-detail__sync-status--synced {
+  color: #15803d;
+  background-color: #dcfce7;
+  border: 1px solid #bbf7d0;
+}

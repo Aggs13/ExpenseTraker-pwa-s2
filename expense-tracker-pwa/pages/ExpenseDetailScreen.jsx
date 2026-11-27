@@ -87,6 +87,20 @@ export default function ExpenseDetailScreen() {
               <dd>{formatDate(createdAt)}</dd>
             </div>
             <div className="expense-detail__field">
+              <dt>Sincronización</dt>
+              <dd>
+                {expense.hasPendingWrites ? (
+                  <span className="expense-detail__sync-status expense-detail__sync-status--pending">
+                    ⏳ Pendiente de sincronizar (Offline)
+                  </span>
+                ) : (
+                  <span className="expense-detail__sync-status expense-detail__sync-status--synced">
+                    ✓ Sincronizado en la nube
+                  </span>
+                )}
+              </dd>
+            </div>
+            <div className="expense-detail__field">
               <dt>Notas</dt>
               <dd>{expense.notes || 'Sin notas.'}</dd>
             </div>

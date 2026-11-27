@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { IoCloudUploadOutline } from 'react-icons/io5';
 import CategoryBadge from './CategoryBadge';
 import CategoryIcon from './CategoryIcon';
 import { getCategoryMeta } from '../data/categories';
@@ -20,7 +21,19 @@ export default function ExpenseCard({ expense }) {
         </span>
 
         <div className="expense-card__info">
-          <p className="expense-card__name">{title}</p>
+          <div className="expense-card__title-row">
+            <p className="expense-card__name">{title}</p>
+            {expense.hasPendingWrites && (
+              <span
+                className="expense-card__pending-badge"
+                title="Pendiente de sincronizar con Firestore"
+                aria-label="Pendiente de sincronizar"
+              >
+                <IoCloudUploadOutline aria-hidden="true" />
+                <span>Pendiente</span>
+              </span>
+            )}
+          </div>
           <CategoryBadge category={expense.category} />
         </div>
 

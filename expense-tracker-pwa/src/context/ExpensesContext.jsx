@@ -23,12 +23,14 @@ export function ExpensesProvider({ children }) {
 
     const unsubscribe = onSnapshot(
       q,
+      { includeMetadataChanges: true },
       (snapshot) => {
         const items = snapshot.docs.map((snapshotDoc) => {
           const data = snapshotDoc.data({ serverTimestamps: 'estimate' });
           return {
             id: snapshotDoc.id,
             ...data,
+            hasPendingWrites: snapshotDoc.metadata.hasPendingWrites,
             createdAt: data.createdAt?.toDate
               ? data.createdAt.toDate().toISOString()
               : data.createdAt ?? new Date().toISOString(),
