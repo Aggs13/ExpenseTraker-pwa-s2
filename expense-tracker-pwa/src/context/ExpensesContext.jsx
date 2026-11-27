@@ -1,24 +1,51 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { CATEGORIES } from '../data/categories';
 import {
-  EXPENSES_STORAGE_KEY,
-  loadFromStorage,
-  saveToStorage,
-} from '../utils/storage';
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { CATEGORIES } from '../data/categories';
+import { db } from '../services/firebase';
 
 const ExpensesContext = createContext(null);
 
 export function ExpensesProvider({ children }) {
-  // localStorage es síncrono: hidratamos directamente en el estado inicial.
-  const [expenses, setExpenses] = useState(() =>
-    loadFromStorage(EXPENSES_STORAGE_KEY, [], Array.isArray)
-  );
-  const [isLoaded] = useState(true);
+  const [expenses, setExpenses] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    if (!isLoaded) return;
-    saveToStorage(EXPENSES_STORAGE_KEY, expenses);
-  }, [expenses, isLoaded]);
+    const q = query(collection(db, 'expenses'), orderBy('createdAt', 'desc'));
+
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const items = snapshot.docs.map((snapshotDoc) => {
+          const data = snapshotDoc.data({ serverTimestamps: 'estimate' });
+          return {
+            id: snapshotDoc.id,
+            ...data,
+            createdAt: data.createdAt?.toDate
+              ? data.createdAt.toDate().toISOString()
+              : data.createdAt ?? new Date().toISOString(),
+          };
+        });
+
+        setExpenses(items);
+        setIsLoaded(true);
+      },
+      (error) => {
+        console.error('Error al escuchar gastos en Firestore:', error);
+        setIsLoaded(true);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
 
   const addExpense = (data) => {
     const title = String(data?.title ?? data?.name ?? data?.nombre ?? '').trim();
@@ -28,21 +55,25 @@ export function ExpensesProvider({ children }) {
     }
 
     const newExpense = {
-      id: data?.id != null ? String(data.id) : Date.now().toString(),
       title,
       amount,
       category: data?.category ?? data?.categoria ?? CATEGORIES[0],
       notes: String(data?.notes ?? '').trim(),
-      createdAt: data?.createdAt ?? data?.date ?? new Date().toISOString(),
+      createdAt: serverTimestamp(),
     };
 
-    setExpenses((prev) => [newExpense, ...prev]);
+    // No bloqueamos el formulario esperando al servidor (Optimistic UI en offline).
+    addDoc(collection(db, 'expenses'), newExpense).catch((error) => {
+      console.error('Error al guardar el gasto en Firestore:', error);
+    });
+
     return newExpense;
   };
 
   const removeExpense = (id) => {
-    const targetId = String(id);
-    setExpenses((prev) => prev.filter((item) => String(item.id) !== targetId));
+    deleteDoc(doc(db, 'expenses', String(id))).catch((error) => {
+      console.error('Error al eliminar el gasto en Firestore:', error);
+    });
   };
 
   return (
